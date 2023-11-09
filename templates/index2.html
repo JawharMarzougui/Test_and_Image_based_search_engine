@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flickr Photos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="icon" href="static/favicon-32x32.png" type="image/png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background-color: #F0F0F0;
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            margin-top: 15%;
+            color: #333;
+            position: relative;
+        }
+
+        .toggle-button {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+
+        .toggle-button:focus {
+            outline: none;
+        }
+
+        .logo {
+            max-width: 200px;
+            /* Adjust the width as needed */
+            margin-bottom: 20px;
+            /* Add some space between logo and search box */
+        }
+
+        .search-box {
+            padding: 12px;
+            border: 2px solid #000;
+            /* Add a 2px white border */
+            border-radius: 20px;
+            width: 500px;
+            margin-bottom: 10px;
+            background-color: #ddd;
+            /* Grey background */
+            font-size: 16px;
+            /* Larger font size */
+        }
+
+        .search-button {
+            position: relative;
+            left: -40px;
+            top: 2px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 16px;
+            color: #555;
+            /* Icon color */
+            z-index: 1;
+        }
+   .search-type-container {
+    margin-left: 80px;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.search-type-label {
+    font-size: 18px;
+    margin-right: 10px;
+}
+
+.search-type-select {
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #000;
+    border-radius: 10px;
+    background-color: #ddd;
+}
+.image-upload-container {
+    position: relative;
+    margin: 10px 0;
+}
+
+.upload-button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.upload-button i {
+    margin-right: 5px;
+}
+
+#search_by_image {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+}
+#search_image{
+    margin-top:10px;
+    margin-left: 100px;
+}
+#image_url{
+            padding: 12px;
+            border: 2px solid #000;
+            /* Add a 2px white border */
+            border-radius: 10px;
+            width: 300px;
+            margin-bottom: 10px;
+            background-color: #ddd;
+            /* Grey background */
+            font-size: 16px;
+            /* Larger font size */
+}
+
+
+        .dark-mode .search-box {
+            background-color: #333;
+            color: #fff;
+            border: 2px solid #fff;
+            /* Add a 2px white border */
+        }
+
+        .dark-mode {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .dark-mode .search-box {
+            background-color: #333;
+            color: #fff;
+            /* Change text color to white */
+            border: 2px solid #fff;
+            /* Add a 2px white border */
+        }
+
+        .dark-mode .search-button {
+            color: #fff;
+            /* Change button icon color to white */
+        }
+    </style>
+</head>
+<body>
+    <button type="button" id="toggle-mode" class="btn btn-primary toggle-button">🌜</button>
+    <div class="search-type-container">
+        <label for="search_type_select" class="search-type-label">Search by:</label>
+        <select id="search_type_select" class="search-type-select">
+            <option value="text">Text</option>
+            <option value="image">Image</option>
+        </select>
+    </div>
+    
+
+    <div class="container">
+        <img src="static/Flickr_logo.png" alt="Logo" class="logo">
+
+        <form class="search-form text-search" action="/search" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="search_type" value="text"> <!-- Added hidden input -->
+            <input type="text" class="search-box" id="search_by_text" name="query" required>
+            <button type="submit" class="search-button">
+                <i class="fas fa-search"></i>
+            </button>
+        
+        </form>
+        
+        <form id="search_image" class="search-form image-search" action="/search" method="post" enctype="multipart/form-data">
+            <div style="text-align: center; font-size: 24px; font-weight: bold; margin-bottom: 10px;">
+                <div class="image-upload-options" style="display: inline-block;">
+                    <div class="input-local" style="display: inline-block;">
+                        <input type="hidden" name="search_type" value="image">
+                        <label class="upload-button" for="search_by_image">
+                            <i class="fas fa-cloud-upload-alt"></i> Upload Image
+                        </label>
+                        <input type="file" id="search_by_image" name="image" accept="image/*" required>
+                    </div>
+                    &nbsp;&nbsp;&nbsp;
+                    <div style="display: inline-block; margin: 0 10px;">or</div>
+                    &nbsp;&nbsp;&nbsp;
+                    <div class="input-url" style="display: inline-block;">
+                        <input type="hidden" name="search_type" value="image_url">
+                        <input type="text" id="image_url" name="image_url" placeholder="Paste image link">
+                        <button type="button" class="search-button" id="search_by_url">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>                    
+            </div>
+        </form>
+        
+        
+        
+        
+        <script>
+            document.getElementById('search_by_image').addEventListener('change', function() {
+                this.form.submit();
+            });
+            document.getElementById('search_by_url').addEventListener('click', function() {
+                document.getElementById('search_image').submit();
+            });
+        </script>
+        
+    </div>
+    
+
+    
+    <script>
+        document.getElementById('search_by_url').addEventListener('click', function() {
+    document.getElementById('search_image').submit();
+});
+
+document.getElementById('image_url').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault(); // Prevent default form submission behavior
+        document.getElementById('search_image').submit();
+    }
+});
+
+        document.getElementById('search_type_select').addEventListener('change', function() {
+            var selectedSearchType = this.value;
+            var textSearchForm = document.querySelector('.text-search');
+            var imageSearchForm = document.querySelector('.image-search');
+
+            if (selectedSearchType === 'text') {
+                textSearchForm.style.display = 'block';
+                imageSearchForm.style.display = 'none';
+            } else if (selectedSearchType === 'image') {
+                textSearchForm.style.display = 'none';
+                imageSearchForm.style.display = 'block';
+            }
+        });
+
+        // Set default search mode to "by text"
+        document.querySelector('.text-search').style.display = 'block';
+        document.querySelector('.image-search').style.display = 'none';
+        document.getElementById('toggleButton').innerText = 'Switch to Image Search';
+
+                // JavaScript function to toggle between dark and light mode
+                function toggleMode() {
+            const currentMode = document.body.classList.contains('dark-mode');
+            document.body.classList.toggle('dark-mode');
+            const toggleButton = document.querySelector('#toggle-mode');
+            if (currentMode) {
+                toggleButton.textContent = '🌜'; // Sun icon
+                localStorage.setItem('mode', 'light');
+            } else {
+                toggleButton.textContent = '🌞'; // Moon icon
+                localStorage.setItem('mode', 'dark');
+            }
+        }
+
+        // Function to set the mode based on local storage value
+        function setMode() {
+            const mode = localStorage.getItem('mode');
+            if (mode === 'dark') {
+                toggleMode();
+            }
+        }
+
+        const toggleButton = document.querySelector('#toggle-mode');
+        toggleButton.addEventListener('click', toggleMode);
+        setMode();
+    </script>
+</body>
+</html>

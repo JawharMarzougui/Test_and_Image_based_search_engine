@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Flickr Photos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="icon" href="static/favicon-32x32.png" type="image/png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .toggle-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toggle-button:focus {
+            outline: none;
+        }
+
+
+        .logo {
+            max-width: 200px;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            text-align: center;
+            color: #333;
+            margin-top: 50px;
+        }
+
+        .search-box {
+            padding: 12px;
+            border: none;
+            border-radius: 20px;
+            width: 500px;
+            margin-bottom: 10px;
+            background-color: #ddd;
+            font-size: 16px;
+        }
+
+        .search-button {
+            position: relative;
+            left: -40px;
+            top: 2px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 16px;
+            color: #555;
+            z-index: 1;
+        }
+
+        .dark-mode .search-box {
+            background-color: #333;
+            color: #fff;
+            border: 2px solid #fff;
+        }
+
+        .dark-mode {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .dark-mode .search-box {
+            background-color: #333;
+            color: #fff;
+            border: 2px solid #fff;
+        }
+
+        .dark-mode .search-button {
+            color: #fff;
+        }
+        .dark-mode .result-count,
+        .dark-mode .pagination li a,
+        .dark-mode .pagination li.active a,
+        .dark-mode .pagination li span {
+            color: #fff;
+        }
+
+        .line {
+            border-top: 1px solid #ccc;
+            margin: 20px 0;
+        }
+
+        .result-count {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+.image-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+}
+
+.image-item {
+  max-width: 300px;
+  text-align: center;
+  height: 350px;
+  position: relative;
+  /* Add this CSS to reserve the image's place */
+  flex-shrink: 0;
+  flex-grow: 0;
+}
+
+.image-item img {
+  max-width: 100%;
+  max-height: 100%;
+  height: auto;
+  transition: transform 0.3s;
+}
+
+.image-item img:hover {
+  transform: scale(1.1);
+}
+
+
+        .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        }
+
+.pagination ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pagination li {
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.pagination li a {
+  text-decoration: none;
+  color: black;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+}
+
+.pagination li.active a {
+  background-color: #ccc;
+}
+
+    </style>
+</head>
+<body>
+    <button type="button" id="toggle-mode" class="btn btn-primary toggle-button"></button>
+    <div class="container">
+          <a href="/">
+              <img src="static/Flickr_logo.png" alt="Logo" class="logo">
+          </a>
+          <form action="/results" method="get">
+              <input type="text" class="search-box" name="query" value="{{ query }}">
+              <button type="submit" class="search-button">
+                  <i class="fas fa-search"></i>
+              </button>
+          </form>
+    <div class="line"></div>
+    {% if hits %}
+            <div id="image-container" class="image-container">            
+                {% for hit in hits %}
+                {% set image_url = hit['_source']['url'] %}
+                {% if image_url is not none %}
+                    <div class="image-item">
+                        <a href="{{ image_url }}" target="_blank">
+                            <img src="{{ image_url }}">
+                        </a>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% if similar_images %}
+    <div id="image-container" class="image-container"> 
+        {% for image in similar_images %}
+        {% set image_url = image['_source']['url'] %}
+        <div class="image-item"><a href="{{ image_url }}" target="_blank"><img src="{{ image._source.url }}" alt="Image"></a></div>     
+        {% endfor %}
+    </div>
+    {% endif %}   
+</body>
+</html>
